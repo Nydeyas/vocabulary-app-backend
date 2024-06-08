@@ -1,3 +1,8 @@
-__pycache__/ # Cache
-.idea/ # PyCharm settings
-*.sqlite3 # Database
+# Cache
+**/__pycache__/
+
+# PyCharm settings
+.idea/
+
+# Database
+*.sqlite3
