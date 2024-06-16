@@ -1,0 +1,11 @@
+# Environment variables
+.env
+
+# Cache
+**/__pycache__/
+
+# PyCharm settings
+.idea/
+
+# Database
+*.sqlite3
