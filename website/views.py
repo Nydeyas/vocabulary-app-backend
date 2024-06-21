@@ -45,6 +45,71 @@ class UserView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+class UserDetailApiView(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get_object(self, user_id):
+        """
+        Helper method to get the object with given user_id
+        """
+        try:
+            return User.objects.get(id=user_id)
+        except User.DoesNotExist:
+            return None
+
+    def get(self, request, user_id, *args, **kwargs):
+        """
+        Get the User with given user_id
+        """
+        user_instance = self.get_object(user_id)
+        if not user_instance:
+            return Response(
+                {"res": "Object with this user id does not exists"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        serializer = UserSerializer(user_instance)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def put(self, request, user_id, *args, **kwargs):
+        """
+        Updates the User item with given user_id if exists
+        """
+        user_instance = self.get_object(user_id)
+        if not user_instance:
+            return Response(
+                {"res": "Object with this user id does not exists"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        data = {
+            'username': request.data.get('username'),
+            'email': request.data.get('email'),
+            'password': request.data.get('password')
+        }
+        serializer = UserSerializer(instance=user_instance, data=data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, user_id, *args, **kwargs):
+        """
+        Deletes the User item with given user_id if exists
+        """
+        user_instance = self.get_object(user_id)
+        if not user_instance:
+            return Response(
+                {"res": "Object with this user id does not exists"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        user_instance.delete()
+        return Response(
+            {"res": "Object deleted!"},
+            status=status.HTTP_200_OK
+        )
+
+
 class CategoryView(APIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
@@ -75,6 +140,73 @@ class CategoryView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+class CategoryDetailApiView(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get_object(self, category_id):
+        """
+        Helper method to get the object with given category_id
+        """
+        try:
+            return Category.objects.get(id=category_id)
+        except Category.DoesNotExist:
+            return None
+
+    def get(self, request, category_id, *args, **kwargs):
+        """
+        Get the Category with given category_id
+        """
+        category_instance = self.get_object(category_id)
+        if not category_instance:
+            return Response(
+                {"res": "Object with this category id does not exists"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        serializer = CategorySerializer(category_instance)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def put(self, request, category_id, *args, **kwargs):
+        """
+        Updates the Category item with given category_id if exists
+        """
+        category_instance = self.get_object(category_id)
+        if not category_instance:
+            return Response(
+                {"res": "Object with this category id does not exists"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        data = {
+            'name': request.data.get('name'),
+            'word_language': request.data.get('word_language'),
+            'translation_language': request.data.get('translation_language'),
+            'user': request.data.get('user')
+        }
+        serializer = CategorySerializer(instance=category_instance, data=data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, category_id, *args, **kwargs):
+        """
+        Deletes the Category item with given category_id if exists
+        """
+        category_instance = self.get_object(category_id)
+        if not category_instance:
+            return Response(
+                {"res": "Object with this category id does not exists"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        category_instance.delete()
+        return Response(
+            {"res": "Object deleted!"},
+            status=status.HTTP_200_OK
+        )
+
+
+
 class WordView(APIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
@@ -83,6 +215,7 @@ class WordView(APIView):
         """
         Get all the Word items for given requested category
         """
+        print(request.data)
         words = Word.objects.filter(category=request.data.get("category"))
         serializer = WordSerializer(words, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
@@ -103,3 +236,69 @@ class WordView(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class WordDetailApiView(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get_object(self, word_id):
+        """
+        Helper method to get the object with given word_id
+        """
+        try:
+            return Word.objects.get(id=word_id)
+        except Word.DoesNotExist:
+            return None
+
+    def get(self, request, word_id, *args, **kwargs):
+        """
+        Get the Word with given word_id
+        """
+        word_instance = self.get_object(word_id)
+        if not word_instance:
+            return Response(
+                {"res": "Object with this word id does not exists"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        serializer = WordSerializer(word_instance)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def put(self, request, word_id, *args, **kwargs):
+        """
+        Updates the Word item with given word_id if exists
+        """
+        word_instance = self.get_object(word_id)
+        if not word_instance:
+            return Response(
+                {"res": "Object with this word id does not exists"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        data = {
+            'word': request.data.get('word'),
+            'translation': request.data.get('translation'),
+            'is_learned': request.data.get('is_learned'),
+            'category': request.data.get('category')
+        }
+        serializer = WordSerializer(instance=word_instance, data=data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, word_id, *args, **kwargs):
+        """
+        Deletes the Word item with given word_id if exists
+        """
+        word_instance = self.get_object(word_id)
+        if not word_instance:
+            return Response(
+                {"res": "Object with this word id does not exists"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        word_instance.delete()
+        return Response(
+            {"res": "Object deleted!"},
+            status=status.HTTP_200_OK
+        )

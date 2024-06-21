@@ -4,7 +4,10 @@ from .views import *
 
 urlpatterns = [
     path('', HomeView.as_view()),
-    path('api/user', UserView.as_view(), name="API - user"),
-    path('api/category', CategoryView.as_view(), name="API - category"),
-    path('api/word', WordView.as_view(), name="API - word"),
+    path('api/user', UserView.as_view()),
+    path('api/category', CategoryView.as_view()),
+    path('api/word', WordView.as_view()),
+    path('api/user/<int:user_id>', UserDetailApiView.as_view()),
+    path('api/category/<int:category_id>', CategoryDetailApiView.as_view()),
+    path('api/word/<int:word_id>', WordDetailApiView.as_view()),
 ]
