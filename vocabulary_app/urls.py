@@ -16,11 +16,8 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 urlpatterns = [
-    # Admin panel
-    path('admin/', admin.site.urls),
     # Website URLs
     path('', include('website.urls')),
 ]

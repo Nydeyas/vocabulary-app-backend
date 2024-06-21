@@ -1,6 +1,6 @@
 from .models import User, Category, Word
 from .serializer import UserSerializer, CategorySerializer, WordSerializer
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -28,7 +28,6 @@ class LoginView(APIView):
         username = request.data.get('username')
         password = request.data.get('password')
 
-        print(request.data)
         user = authenticate(request, username=username, password=password)
 
         if user is not None:
@@ -275,7 +274,6 @@ class WordView(APIView):
         """
         Get all the Word items for given requested category
         """
-        print(request.data)
         words = Word.objects.filter(category=request.data.get("category"))
         serializer = WordSerializer(words, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
