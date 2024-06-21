@@ -1,10 +1,15 @@
 from .models import User, Category, Word
 from .serializer import UserSerializer, CategorySerializer, WordSerializer
+from django.contrib.auth import authenticate, login
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.permissions import AllowAny
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework_simplejwt.tokens import RefreshToken
+from django.contrib.auth.password_validation import validate_password
+from django.core.exceptions import ValidationError
 
 
 class HomeView(APIView):
@@ -14,6 +19,61 @@ class HomeView(APIView):
     def get(self, request):
         content = {'message': "Successfully connected to the API"}
         return Response(content)
+
+
+class LoginView(APIView):
+    permission_classes = [AllowAny]
+    authentication_classes = []
+    def post(self, request, *args, **kwargs):
+        username = request.data.get('username')
+        password = request.data.get('password')
+
+        print(request.data)
+        user = authenticate(request, username=username, password=password)
+
+        if user is not None:
+            refresh = RefreshToken.for_user(user)
+            return Response({
+                'refresh': str(refresh),
+                'access': str(refresh.access_token),
+            })
+        else:
+            return Response({'detail': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
+
+
+class RegisterView(APIView):
+    permission_classes = [AllowAny]
+    authentication_classes = []
+
+    def post(self, request, *args, **kwargs):
+        username = request.data.get('username')
+        email = request.data.get('email')
+        password = request.data.get('password')
+
+        # Validate data
+        if not username or not email or not password:
+            return Response(
+                {'detail': 'Username, email, and password are required.'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        # Validate password
+        try:
+            validate_password(password)
+        except ValidationError as e:
+            return Response({'detail': e.messages}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Create user
+        try:
+            user = User.objects.create_user(username=username, email=email, password=password)
+        except Exception as e:
+            return Response({'detail': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Return response
+        if user:
+            return Response({'detail': 'User created successfully.'}, status=status.HTTP_201_CREATED)
+        else:
+            return Response({'detail': 'Failed to create user.'}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class UserView(APIView):

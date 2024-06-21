@@ -1,18 +1,46 @@
+from django.contrib.auth.models import (
+    PermissionsMixin, BaseUserManager, AbstractBaseUser, UserManager
+)
 from django.db import models
+from django.contrib.auth.hashers import make_password, check_password
 
+
+class UserManager(BaseUserManager):
+    def create_user(self, username, email=None, password=None, **extra_fields):
+        if not username:
+            raise ValueError('The username must be set')
+
+        email = self.normalize_email(email)
+        user = self.model(username=username, email=email, **extra_fields)
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
 
 class User(models.Model):
-    id = models.AutoField(db_column='id', primary_key=True)
-    username = models.CharField(db_column='username', max_length=50)
-    email = models.EmailField(db_column='email', max_length=80)
-    password = models.CharField(db_column='password', max_length=255)
+    username = models.CharField(max_length=50, unique=True)
+    email = models.EmailField(max_length=80, unique=True)
+    password = models.CharField(max_length=255)
+
+    objects = UserManager()
+    REQUIRED_FIELDS = []
+    USERNAME_FIELD = 'username'
+    is_anonymous = False
+    is_authenticated = True
 
     class Meta:
-        managed = False
         db_table = 'user'
 
     def __str__(self):
-        return f"{self.username} ({self.email})"
+        return self.username
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+
+    def set_password(self, raw_password):
+        self.password = make_password(raw_password)
+
+    def check_password(self, raw_password):
+        return check_password(raw_password, self.password)
 
 
 class Category(models.Model):
