@@ -175,10 +175,13 @@ class CategoryView(APIView):
 
     def get(self, request, *args, **kwargs):
         """
-        Get all the category items for given requested user
+        Get Category items
         """
-        if request.data.get("user"):
-            categories = Category.objects.filter(user=request.data.get("user"))
+        user_id = request.GET.get('userId')
+        # Filtering categories for given requested user
+        if user_id:
+            categories = Category.objects.filter(user=user_id)
+        # Showing all categories
         else:
             categories = Category.objects.all()
         serializer = CategorySerializer(categories, many=True)
@@ -275,10 +278,13 @@ class WordView(APIView):
 
     def get(self, request, *args, **kwargs):
         """
-        Get all the Word items for given requested category
+        Get Word items
         """
-        if request.data.get("category"):
-            words = Word.objects.filter(category=request.data.get("category"))
+        category_id = request.GET.get('categoryId')
+        # Filtering words for given requested category
+        if category_id:
+            words = Word.objects.filter(category=category_id)
+        # Showing all words
         else:
             words = Word.objects.all()
         serializer = WordSerializer(words, many=True)
