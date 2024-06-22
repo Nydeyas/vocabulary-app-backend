@@ -81,9 +81,9 @@ class UserView(APIView):
 
     def get(self, request, *args, **kwargs):
         """
-        Get the User by ID
+        Get all Users
         """
-        user = User.objects.filter(id=request.data.get("user"))
+        user = User.objects.all()
         serializer = UserSerializer(user, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -177,7 +177,10 @@ class CategoryView(APIView):
         """
         Get all the category items for given requested user
         """
-        categories = Category.objects.filter(user=request.data.get("user"))
+        if request.data.get("user"):
+            categories = Category.objects.filter(user=request.data.get("user"))
+        else:
+            categories = Category.objects.all()
         serializer = CategorySerializer(categories, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -274,7 +277,10 @@ class WordView(APIView):
         """
         Get all the Word items for given requested category
         """
-        words = Word.objects.filter(category=request.data.get("category"))
+        if request.data.get("category"):
+            words = Word.objects.filter(category=request.data.get("category"))
+        else:
+            words = Word.objects.all()
         serializer = WordSerializer(words, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 

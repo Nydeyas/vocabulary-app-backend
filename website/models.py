@@ -24,6 +24,7 @@ class User(models.Model):
     objects = UserManager()
     REQUIRED_FIELDS = []
     USERNAME_FIELD = 'username'
+    is_active = True
     is_anonymous = False
     is_authenticated = True
 
