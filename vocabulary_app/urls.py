@@ -33,5 +33,5 @@ urlpatterns = [
     # Redirect to HomeView
     path('', RedirectView.as_view(url='/api'), name='api-redirect'),
     # Redirect uppercase URLs to lowercase
-    path('<str:slug>/', RedirectView.as_view(url='/<slug_lowercase>/')),
+    path('<str:slug>', RedirectView.as_view(url='/<slug_lowercase>')),
 ]
