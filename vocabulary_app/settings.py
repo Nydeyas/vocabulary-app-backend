@@ -34,14 +34,7 @@ DEBUG = env('DEBUG')
 ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
 CORS_ALLOWED_ORIGINS = env.list("CORS_ALLOWED_ORIGINS")
 
-
-
 AUTH_USER_MODEL = 'website.User'
-
-ALLOWED_HOSTS = [
-    '127.0.0.1',
-    'localhost',
-]
 
 # Application definition
 
@@ -70,13 +63,6 @@ MIDDLEWARE = [
 
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
-]
-
-CORS_ALLOWED_ORIGINS = [
-    # Front-end
-    'http://localhost:5200',
-    # POSTMAN for testing
-    'http://localhost:5555',
 ]
 
 REST_FRAMEWORK = {
