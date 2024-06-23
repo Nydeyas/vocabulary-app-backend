@@ -52,7 +52,6 @@ class Category(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     class Meta:
-        managed = False
         db_table = 'category'
 
     def __str__(self):
@@ -67,7 +66,6 @@ class Word(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
 
     class Meta:
-        managed = False
         db_table = 'word'
 
     def __str__(self):
