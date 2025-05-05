@@ -1,7 +1,5 @@
 # Vocabulary App (backend)
 
-The API is deployed on MS Azure and can be accessed [here](https://vocabulary-app-backend.azurewebsites.net/)
-
 Vocabulary App (frontend): [repository](https://github.com/AniaPitera/vocabulary-app-frontend)
 
 # Setup Guide
