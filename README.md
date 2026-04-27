@@ -1,4 +1,16 @@
 # Vocabulary App (backend)
+Back-end for memo vocabulary application, implemented in Python with PostgreSQL as the database.
+
+**✔️ Implemented:**
+- Backend data validation
+- Password hashing
+- JWT Authentication
+- CORS
+
+**❌ Not implemented:**
+- HTTPS/SSL
+- Account lockout after failed login attempts
+- 2FA
 
 Vocabulary App (frontend): [repository](https://github.com/AniaPitera/vocabulary-app-frontend)
 
@@ -78,7 +90,7 @@ Vocabulary App (frontend): [repository](https://github.com/AniaPitera/vocabulary
 
 ## Testing the Backend
 
-You can test the backend application using Postman:
+You can test the backend application using Postman software:
 1. **Register a User**: Send a POST request to `/api/register` to add a new user.
 2. **Login**: Send a POST request to `/api/login` to obtain a login token.
 
@@ -98,3 +110,6 @@ For example:
 - To delete a user: Send a DELETE request to `/api/user/<int>`
 
 Ensure you include the bearer token in the Authorization header for all these requests.
+
+# Documentation
+ `docs` directory (only in Polish)
